@@ -21,7 +21,7 @@ int main()
 	for (auto&& array : vetores) {
 		std::ranges::generate(array, rand);
 		clock = std::chrono::high_resolution_clock::now();
-		accum += bubble::sort(array);
+		accum += count::sort(array);
 		ns_accum += std::chrono::high_resolution_clock::now() - clock;
 	}
 	const auto media = double(accum) / vetores.size();
