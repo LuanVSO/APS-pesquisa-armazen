@@ -112,7 +112,6 @@ namespace merge {
 	}
 }
 
-
 namespace quick {
 	template<typename T>
 	constexpr inline T median(T t1, T t2, T t3) {
@@ -150,10 +149,10 @@ namespace quick {
 
 		const auto parte1 = std::partition(begin, end, comp_contada);
 		const auto parte2 = std::partition(parte1, end, comp_contada_menorigual);
-		comp_contada.count += quick::sort(begin, parte1);
-		comp_contada.count += quick::sort(parte2,end);
+		num_comparacao += quick::sort(begin, parte1);
+		num_comparacao += quick::sort(parte2,end);
 
-		return comp_contada.count;
+		return num_comparacao;
 	}
 	export uint64_t sort(std::ranges::random_access_range auto& in) {
 		const auto r = quick::sort(in.begin(), in.end());
@@ -162,24 +161,16 @@ namespace quick {
 	}
 }
 
-
 namespace count {
 	export template <std::ranges::random_access_range T>
 	uint64_t sort(T& in) {
 		uint64_t num_comp{};
 		const auto comp_contada= [&num_comp](const auto& l, const auto& r) {num_comp++; return l < r; };
-		std::map<T::value_type, int> auxiliar{};
-		for (auto&& val : in) {
-			auxiliar[val]++;
-		} 
-		auto iter = in.begin();
-		for (auto&& [key, n] : auxiliar) {
-			while (n!=0) {
-				*iter++ = key;
-				n--;
-			}
-		}
-		if (!std::ranges::is_sorted(in)) __debugbreak();
+		(void)std::ranges::max_element(in, comp_contada);
+		(void)std::ranges::min_element(in, comp_contada);
 		return num_comp;
 	}
 }
+
+
+
