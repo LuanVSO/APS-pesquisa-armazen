@@ -9,9 +9,7 @@
 #include <ranges>
 #include <cassert>
 #include <chrono>
-
-
-import sortAlgos;
+#include "sortAlgos.h"
 
 int main()
 {
@@ -34,20 +32,19 @@ int main()
 	using namespace std::string_view_literals;
 
 	const auto sort_functions = {
-		std::pair{&bubble::sort<std::vector<int>>,"bubble"sv},
-		std::pair{&selection::sort<std::vector<int>>,"selection"sv},
-		std::pair{&insertion::sort<std::vector<int>>,"insertion"sv},
-		std::pair{&heap::sort<std::vector<int>>,"heap"sv },
-		std::pair{&merge::sort<std::vector<int>>,"merge"sv},
-		std::pair{&quick::sort<std::vector<int>>,"quick"sv},
-		std::pair{&count::sort<std::vector<int>>,"count"sv}
-
+		std::pair{bubble   ::sort<std::vector<int>>,   "bubble"sv},
+		std::pair{selection::sort<std::vector<int>>,"selection"sv},
+		std::pair{insertion::sort<std::vector<int>>,"insertion"sv},
+		std::pair{heap     ::sort<std::vector<int>>,     "heap"sv},
+		std::pair{merge    ::sort<std::vector<int>>,    "merge"sv},
+		std::pair{quick    ::sort<std::vector<int>>,    "quick"sv},
+		std::pair{count    ::sort<std::vector<int>>,    "count"sv}
 	};
 
 	for (auto& [sort_func, name] : sort_functions) {
 		std::cout << name << ":\n";
 		for (const auto& size : tamanhos) {
-			std::cout << size << ": " << run(*sort_func, size) << '\n';
+			std::cout << size << ": " << run(sort_func, size) << '\n';
 		}
 		std::cout << "========================\n";
 	}

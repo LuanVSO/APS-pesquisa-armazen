@@ -1,4 +1,4 @@
-module;
+#pragma once
 #include <ranges>
 #include <cstdint>
 #include <algorithm>
@@ -6,10 +6,9 @@ module;
 #include <map>
 #include <functional>
 #include <compare>
-export module sortAlgos;
 
 namespace bubble {
-	export uint64_t sort(std::ranges::random_access_range auto& in) {
+	 uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		size_t n{ in.size() };
 
@@ -30,7 +29,7 @@ namespace bubble {
 }
 
 namespace selection {
-	export uint64_t sort(std::ranges::random_access_range auto& in) {
+	 uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		size_t size = in.size();
 
@@ -50,7 +49,7 @@ namespace selection {
 }
 
 namespace insertion {
-	export uint64_t sort(std::ranges::bidirectional_range auto& in) {
+	 uint64_t sort(std::ranges::bidirectional_range auto& in) {
 		uint64_t num_comparacao{};
 
 		for (auto i = std::next(in.begin()); i != in.end(); i++)
@@ -68,7 +67,7 @@ namespace insertion {
 }
 
 namespace heap {
-	export uint64_t sort(std::ranges::random_access_range auto& in) {
+	 uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		const auto comp_contada =
 			[&num_comparacao](const auto& i, const auto& b) {
@@ -87,7 +86,7 @@ namespace heap {
 }
 
 namespace merge {
-	export template<typename Begin, typename End> requires std::contiguous_iterator<Begin>&& std::contiguous_iterator<End>
+	 template<typename Begin, typename End> requires std::contiguous_iterator<Begin>&& std::contiguous_iterator<End>
 		uint64_t sort(Begin begin, End end) {
 		uint64_t num_comparacao{};
 		const auto comp_contada = [&num_comparacao](const auto& i, const auto& b) {
@@ -107,7 +106,7 @@ namespace merge {
 		if (!std::is_sorted(begin, end)) __debugbreak();
 		return num_comparacao;
 	}
-	export uint64_t sort(std::ranges::contiguous_range auto& in) {
+	 uint64_t sort(std::ranges::contiguous_range auto& in) {
 		return merge::sort(in.begin(), in.end());
 	}
 }
@@ -132,7 +131,7 @@ namespace quick {
 				return t2;
 		}
 	}
-	export uint64_t sort(std::random_access_iterator auto begin, std::random_access_iterator auto end) {
+	 uint64_t sort(std::random_access_iterator auto begin, std::random_access_iterator auto end) {
 		uint64_t num_comparacao{};
 
 		if (begin == end || begin + 1 == end)
@@ -150,11 +149,11 @@ namespace quick {
 		const auto parte1 = std::partition(begin, end, comp_contada);
 		const auto parte2 = std::partition(parte1, end, comp_contada_menorigual);
 		num_comparacao += quick::sort(begin, parte1);
-		num_comparacao += quick::sort(parte2,end);
+		num_comparacao += quick::sort(parte2, end);
 
 		return num_comparacao;
 	}
-	export uint64_t sort(std::ranges::random_access_range auto& in) {
+	 uint64_t sort(std::ranges::random_access_range auto& in) {
 		const auto r = quick::sort(in.begin(), in.end());
 		if (!std::ranges::is_sorted(in)) __debugbreak();
 		return r;
@@ -162,15 +161,15 @@ namespace quick {
 }
 
 namespace count {
-	export template <std::ranges::random_access_range T>
-	uint64_t sort(T& in) {
+	 template <std::ranges::random_access_range T>
+		uint64_t sort(T& in) {
 		uint64_t num_comp{};
-		const auto comp_contada= [&num_comp](const auto& l, const auto& r) {num_comp++; return l < r; };
+		const auto comp_contada = [&num_comp](const auto& l, const auto& r) {num_comp++; return l < r; };
 		(void)std::ranges::max_element(in, comp_contada);
 		(void)std::ranges::min_element(in, comp_contada);
+
+
+
 		return num_comp;
 	}
 }
-
-
-

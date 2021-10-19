@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APS-pesquisa-armazen", "APS-pesquisa-armazen\APS-pesquisa-armazen.vcxproj", "{BC1C6F91-39D5-44B5-82D6-47060DFC8DB3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sort-algos", "sort-algos\sort-algos.vcxproj", "{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{49A0BBDC-CCFF-4C8E-9FC0-66A2F92A15CC}"
 	ProjectSection(SolutionItems) = preProject
 		common.build.props = common.build.props
@@ -28,14 +26,6 @@ Global
 		{BC1C6F91-39D5-44B5-82D6-47060DFC8DB3}.Release|x64.Build.0 = Release|x64
 		{BC1C6F91-39D5-44B5-82D6-47060DFC8DB3}.Release|x86.ActiveCfg = Release|Win32
 		{BC1C6F91-39D5-44B5-82D6-47060DFC8DB3}.Release|x86.Build.0 = Release|Win32
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Debug|x64.ActiveCfg = Debug|x64
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Debug|x64.Build.0 = Debug|x64
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Debug|x86.ActiveCfg = Debug|Win32
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Debug|x86.Build.0 = Debug|Win32
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Release|x64.ActiveCfg = Release|x64
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Release|x64.Build.0 = Release|x64
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Release|x86.ActiveCfg = Release|Win32
-		{E6A2312A-F539-4F33-BFF7-17D0DA63C09C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
