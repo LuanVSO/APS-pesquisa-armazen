@@ -4,11 +4,12 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <type_traits>
 #include <functional>
 #include <compare>
 
 namespace bubble {
-	 uint64_t sort(std::ranges::random_access_range auto& in) {
+	uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		size_t n{ in.size() };
 
@@ -29,7 +30,7 @@ namespace bubble {
 }
 
 namespace selection {
-	 uint64_t sort(std::ranges::random_access_range auto& in) {
+	uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		size_t size = in.size();
 
@@ -49,7 +50,7 @@ namespace selection {
 }
 
 namespace insertion {
-	 uint64_t sort(std::ranges::bidirectional_range auto& in) {
+	uint64_t sort(std::ranges::bidirectional_range auto& in) {
 		uint64_t num_comparacao{};
 
 		for (auto i = std::next(in.begin()); i != in.end(); i++)
@@ -67,7 +68,7 @@ namespace insertion {
 }
 
 namespace heap {
-	 uint64_t sort(std::ranges::random_access_range auto& in) {
+	uint64_t sort(std::ranges::random_access_range auto& in) {
 		uint64_t num_comparacao{};
 		const auto comp_contada =
 			[&num_comparacao](const auto& i, const auto& b) {
@@ -86,8 +87,8 @@ namespace heap {
 }
 
 namespace merge {
-	 template<typename Begin, typename End> requires std::contiguous_iterator<Begin>&& std::contiguous_iterator<End>
-		uint64_t sort(Begin begin, End end) {
+	template<typename Begin, typename End> requires std::contiguous_iterator<Begin>&& std::contiguous_iterator<End>
+	uint64_t sort(Begin begin, End end) {
 		uint64_t num_comparacao{};
 		const auto comp_contada = [&num_comparacao](const auto& i, const auto& b) {
 			num_comparacao++;
@@ -106,7 +107,7 @@ namespace merge {
 		if (!std::is_sorted(begin, end)) __debugbreak();
 		return num_comparacao;
 	}
-	 uint64_t sort(std::ranges::contiguous_range auto& in) {
+	uint64_t sort(std::ranges::contiguous_range auto& in) {
 		return merge::sort(in.begin(), in.end());
 	}
 }
@@ -131,7 +132,7 @@ namespace quick {
 				return t2;
 		}
 	}
-	 uint64_t sort(std::random_access_iterator auto begin, std::random_access_iterator auto end) {
+	uint64_t sort(std::random_access_iterator auto begin, std::random_access_iterator auto end) {
 		uint64_t num_comparacao{};
 
 		if (begin == end || begin + 1 == end)
@@ -153,7 +154,7 @@ namespace quick {
 
 		return num_comparacao;
 	}
-	 uint64_t sort(std::ranges::random_access_range auto& in) {
+	uint64_t sort(std::ranges::random_access_range auto& in) {
 		const auto r = quick::sort(in.begin(), in.end());
 		if (!std::ranges::is_sorted(in)) __debugbreak();
 		return r;
@@ -161,15 +162,94 @@ namespace quick {
 }
 
 namespace count {
-	 template <std::ranges::random_access_range T>
-		uint64_t sort(T& in) {
+	template <std::ranges::random_access_range T>
+	uint64_t sort(T& in) {
 		uint64_t num_comp{};
 		const auto comp_contada = [&num_comp](const auto& l, const auto& r) {num_comp++; return l < r; };
 		(void)std::ranges::max_element(in, comp_contada);
 		(void)std::ranges::min_element(in, comp_contada);
 
+		std::map<T::value_type, uint32_t> counters{};
 
+		for (auto& val : in) {
+			counters[val]++;
+		}
+		auto iter = in.begin();
+		for (auto&& [key, n] : counters) {
+			while (n != 0) {
+				*iter++ = key;
+				n--;
+			}
+		}
 
+		if (!std::ranges::is_sorted(in)) __debugbreak();
 		return num_comp;
+	}
+}
+
+namespace bucket {
+	template<std::ranges::range R>
+	uint64_t sort(R& in) {
+		if (in.size() < 20) {
+			return insertion::sort(in);
+		}
+		const size_t qtdebaldes = in.size() / 10;
+		std::vector<std::vector<R::value_type>> buckets(qtdebaldes);
+		uint64_t comps{};
+			for (auto& el:in) {
+
+				auto x = el%qtdebaldes;
+				buckets[x].push_back(el);
+			}
+			for (auto& bucket : buckets) {
+				comps += insertion::sort(bucket);
+			}
+			auto it = in.begin();
+			for (auto& bucket : buckets) {
+				for (auto& elem : bucket) {
+					*it++ = elem;
+				}
+			}
+
+			if (!std::ranges::is_sorted(in)) __debugbreak();
+			return comps;
+	}
+}
+
+namespace radix {
+
+	// Radix sort comparator for 32-bit two's complement integers
+	class radix_test
+	{
+		const int bit; // bit position [0..31] to examine
+		uint64_t& cont;
+	public:
+		radix_test(int offset, uint64_t& Cont) : bit(offset) ,cont { Cont } {} // constructor
+
+		bool operator()(int value) // function call operator
+		{
+			cont++;
+			if (bit == 31) // sign bit
+				return value < 0; // negative int to left partition
+			else
+				return !(value & (1 << bit)); // 0 bit to left partition
+		}
+	};
+
+	// Least significant digit radix sort
+	uint64_t lsd_radix_sort(auto first, auto last)
+	{
+		uint64_t cont;
+		for (int lsb = 0; lsb < 32; ++lsb) // least-significant-bit
+		{
+			std::stable_partition(first, last, radix_test(lsb,cont));
+		}
+		return cont;
+	}
+	template<std::ranges::range R>
+	uint64_t sort(R& in) {
+		auto i = lsd_radix_sort(in.begin(), in.end());
+		if (!std::ranges::is_sorted(in)) __debugbreak();
+		return i;
 	}
 }

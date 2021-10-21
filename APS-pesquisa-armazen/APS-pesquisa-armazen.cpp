@@ -32,13 +32,15 @@ int main()
 	using namespace std::string_view_literals;
 
 	const auto sort_functions = {
-		std::pair{bubble   ::sort<std::vector<int>>,   "bubble"sv},
-		std::pair{selection::sort<std::vector<int>>,"selection"sv},
-		std::pair{insertion::sort<std::vector<int>>,"insertion"sv},
-		std::pair{heap     ::sort<std::vector<int>>,     "heap"sv},
-		std::pair{merge    ::sort<std::vector<int>>,    "merge"sv},
+		//std::pair{bubble   ::sort<std::vector<int>>,   "bubble"sv},
+		//std::pair{selection::sort<std::vector<int>>,"selection"sv},
+		//std::pair{insertion::sort<std::vector<int>>,"insertion"sv},
+		//std::pair{heap     ::sort<std::vector<int>>,     "heap"sv},
+		//std::pair{merge    ::sort<std::vector<int>>,    "merge"sv},
 		std::pair{quick    ::sort<std::vector<int>>,    "quick"sv},
-		std::pair{count    ::sort<std::vector<int>>,    "count"sv}
+		std::pair{count    ::sort<std::vector<int>>,    "count"sv},
+		//std::pair{bucket   ::sort<std::vector<int>>,   "bucket"sv},
+		std::pair{radix    ::sort<std::vector<int>>,    "radix"sv}
 	};
 
 	for (auto& [sort_func, name] : sort_functions) {
