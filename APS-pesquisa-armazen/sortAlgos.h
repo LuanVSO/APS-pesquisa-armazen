@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iterator>
 #include <map>
+#include <cmath>
 #include <type_traits>
 #include <functional>
 #include <compare>
@@ -52,7 +53,7 @@ namespace selection {
 namespace insertion {
 	uint64_t sort(std::ranges::bidirectional_range auto& in) {
 		uint64_t num_comparacao{};
-
+		if (in.size() == 0) return num_comparacao;
 		for (auto i = std::next(in.begin()); i != in.end(); i++)
 		{
 			for (auto ant = i, p = std::prev(i);
@@ -188,18 +189,29 @@ namespace count {
 }
 
 namespace bucket {
+	template<std::signed_integral T>
+	std::make_unsigned_t<T> to_unsigned(T s) {
+		std::make_unsigned_t<T> u = 1U + std::numeric_limits<T>::max();
+		u += s;
+		return u;
+	}
+	template<std::unsigned_integral T>
+	T to_unsigned(T s) {
+		return s;
+	}
 	template<std::ranges::range R>
 	uint64_t sort(R& in) {
 		if (in.size() < 20) {
 			return insertion::sort(in);
 		}
-		const size_t qtdebaldes = in.size() / 10;
+		const size_t qtdebaldes = in.size()<20?5:in.size() / 10;
 		std::vector<std::vector<R::value_type>> buckets(qtdebaldes);
 		uint64_t comps{};
+		constexpr auto range =std::numeric_limits<std::make_unsigned_t<R::value_type>>::max();
 			for (auto& el:in) {
-
-				auto x = el%qtdebaldes;
-				buckets[x].push_back(el);
+				const size_t i = to_unsigned(el);
+				const size_t result = (i * qtdebaldes) / range;
+				buckets[result].push_back(el);
 			}
 			for (auto& bucket : buckets) {
 				comps += insertion::sort(bucket);
